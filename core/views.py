@@ -572,21 +572,22 @@ class PostEditView(UpdateView):
         )
 
     def form_valid(self, form):
-        if form.has_changed():
+        with transaction.atomic():
             post = form.save(commit=False)
             post.owner = self.request.user
             post.image = form.cleaned_data['image']
             post.save()
 
-            circle_ids = {uuid.UUID(circle_id)
-                          for circle_id in form.data.getlist('circles')}
-            circles = self.request.user.circles.filter(pk__in=circle_ids)
+            selected_circles = form.cleaned_data.get('circles')
 
-            form.instance.publish(circles=circles)
+            existing_post_circles = models.PostCircle.objects.filter(post=post)
+            existing_post_circles.exclude(circle__in=selected_circles).delete()
+
+            for circle in selected_circles:
+                models.PostCircle.objects.get_or_create(
+                    circle=circle, post=post)
             return super().form_valid(form)
-        else:
-            return redirect(self.get_success_url())
-
+        
 post_edit = PostEditView.as_view()
 
 class PostDetailView(DetailView):
