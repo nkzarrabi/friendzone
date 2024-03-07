@@ -353,8 +353,12 @@ class IntegrationTests(object):
             (By.XPATH, "//button[contains(text(), 'create')]")))
         create_button.click()
 
-        self.browser.find_element(By.LINK_TEXT, "View").click()
-        self.browser.find_element(By.LINK_TEXT, "Edit").click()
+        element = self.browser.find_element(By.LINK_TEXT, "View")
+        self.browser.execute_script("arguments[0].scrollIntoView(true);", element)
+        element.click()
+        element = self.browser.find_element(By.LINK_TEXT, "Edit")
+        self.browser.execute_script("arguments[0].scrollIntoView(true);", element)
+        element.click()
 
         post_input = self.browser.find_element(By.NAME, 'text')
         post_input.clear()
