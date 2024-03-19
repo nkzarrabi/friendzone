@@ -162,3 +162,4 @@ def env_truthiness(v):
     }[str(v).lower()]
 
 TEST_INTEGRATION_HEADLESS = env_truthiness(os.environ.get('HEADLESS', 1))
+SESSION_COOKIE_SECURE = True
