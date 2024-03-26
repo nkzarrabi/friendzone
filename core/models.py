@@ -369,6 +369,11 @@ class Intro(models.Model):
 
         return result
 
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
+
 class Connection(models.Model):
     '''
     Every connection has an opposite connection, which is created on save.
@@ -465,6 +470,11 @@ class Connection(models.Model):
 
         return result
 
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
+
 
 class UserConnection(models.Model):
     # This exists so that if Connection is deleted, UserConnection is deleted
@@ -483,6 +493,11 @@ class UserConnection(models.Model):
         on_delete=models.CASCADE,
         related_name='+',
     )
+
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
 
 class Circle(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -558,6 +573,11 @@ class CircleMembership(models.Model):
         assert self.circle.owner == self.connection.owner
         return super().save(*args, **kwargs)
 
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
+
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     connection = models.ForeignKey(
@@ -576,6 +596,11 @@ class Message(models.Model):
     @property
     def to_user(self):
         return self.connection.other_user
+
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -631,6 +656,11 @@ class PostCircle(models.Model):
 
         return result
 
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
+
 
 class PostUser(models.Model):
     post_circle = models.ForeignKey(
@@ -643,3 +673,8 @@ class PostUser(models.Model):
         on_delete=models.CASCADE,
         related_name='+',
     )
+
+    def __str__(self):
+        model_name = self.__class__.__name__
+        fields_str = ", ".join((f"{field.name}={getattr(self, field.name)}" for field in self._meta.fields))
+        return f"{model_name}({fields_str})"
